@@ -1,0 +1,168 @@
+<html>
+	<head>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				background: linear-gradient(180deg, #1e1e2e, #2b2b3c);
+				font-family: Arial, sans-serif;
+				color: #fff;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				padding: 20px;
+			}
+
+			h1.output {
+				width: 100%;
+				max-width: 400px;
+				min-height: 60px;
+				background: #1e1e2e;
+				border: 2px solid #333;
+				border-radius: 8px;
+				padding: 10px 15px;
+				font-size: 2rem;
+				color: #e5e5e5;
+				text-align: right;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+				margin-bottom: 20px;
+				overflow-x: auto;
+			}
+
+			.calc_logics {
+				width: 100%;
+				max-width: 400px;
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 15px;
+			}
+
+			.calc_logics button {
+				height: 60px;
+				cursor: pointer;
+				background: #333;
+				border: none;
+				border-radius: 8px;
+				font-size: 1.5rem;
+				font-weight: bold;
+				color: #e5e5e5;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+				transition: background 0.3s ease, transform 0.2s ease;
+			}
+
+			.calc_logics button:hover {
+				background: #444;
+				transform: translateY(-2px);
+			}
+
+			.calc_logics button:active {
+				background: #555;
+				transform: translateY(1px);
+			}
+
+			.calc_logics .remove {
+				background: #ff4d4d;
+				color: #fff;
+			}
+
+			.calc_logics .remove:hover {
+				background: #ff6666;
+			}
+
+			.calc_logics .remove:active {
+				background: #ff3333;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 class="output"></h1>
+		<div class="calc_logics">
+			<button>1</button>
+			<button>2</button>
+			<button>3</button>
+			<button>*</button>
+			<button>4</button>
+			<button>5</button>
+			<button>6</button>
+			<button>/</button>
+			<button>7</button>
+			<button>8</button>
+			<button>9</button>
+			<button>-</button>
+			<button class="remove">C</button>
+			<button>0</button>
+			<button>=</button>
+			<button>+</button>
+		</div>
+
+		<script>
+			const btn = document.querySelectorAll('button');
+			const output = document.querySelector('.output');
+			let out = '';
+
+			btn.forEach(item => {
+				item.addEventListener('click', e => {
+					switch (e.target.outerText) {
+						case '+':
+						case '-':
+						case '/':
+						case '*':
+							onSetOperator(e.target.outerText);
+							break;
+						case '=':
+							onCalculate();
+							break;
+						case 'C':
+							clear();
+							break;
+						default:
+							onSetNumber(e.target.outerText);
+					}
+				});
+			});
+
+			function clear() {
+				out = '';
+				output.innerText = '';
+			}
+
+			function onSetNumber(number) {
+				if (out === 'Error') {
+					out = '';
+				}
+				out += number;
+				output.innerText = out;
+			}
+
+			function onCalculate() {
+				try {
+					if (out === '' || /[+\-*/]$/.test(out)) {
+						output.innerText = 'Error';
+						out = '';
+						return;
+					}
+					let val = eval(out);
+					output.innerText = val;
+					out = String(val);
+				} catch {
+					output.innerText = 'Error';
+					out = '';
+				}
+			}
+
+			function onSetOperator(operator) {
+				if (out === '' || /[+\-*/]$/.test(out)) {
+					return;
+				}
+				out += operator;
+				output.innerText = out;
+			}
+		</script>
+	</body>
+</html>
